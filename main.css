@@ -4,6 +4,7 @@
 
 :root {
   --gray: #E0E0E0;
+  --silver: #f5f5f5;
   --tomato: #CD5C5C;
   --coral: #ED8E7C;
   --green: #CDF3A2;
@@ -12,8 +13,40 @@
   --yellow: #FFE194;
   --blue: #2e437c;
   --cyan: #4CA1A3;
-
+  --black: #0f0f0f;
+  --black2: #464646;
   --primary: var(--blue);
+}
+
+/* 애니메이션 */
+@keyframes moveFromLeft {
+  0% {
+    transform: translateX(-4rem);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes moveFromRight {
+  0% {
+    transform: translateX(4rem);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes moveFromBottom {
+  0% {
+    transform: translateY(4rem);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 body {
@@ -49,16 +82,163 @@ body {
   padding: 1.125rem;
 }
 
+.ediya-menu {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1.125rem
+}
+
+.ediya-menu__item {
+  flex: 1 1 40%;
+  position: relative;
+  /* display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto; */
+}
+
+.ediya-menu__item a {
+  display: block;
+  background-color: var(--gray);
+  color: var(--black2);
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
+.ediya-menu__item figure {
+  /* figure는 마진을 가짐 */
+  margin: 0;
+  padding-top: 1.25rem;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.ediya-menu__item img {
+  /* transform: scale(0.85); */
+  transition: all 400ms ease;
+  -webkit-user-select: none;
+  user-select: none;
+  vertical-align: top;
+}
+
+.ediya-menu__item figcaption {
+  margin-bottom: 2.8125rem;
+}
+
+.ediya-menu__item a:hover img {
+  transform: scale(1);
+}
+
+.ediya-menu__item--detail {
+  opacity: 0;
+  background-color: rgba(255, 255, 255, .5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 1px solid var(--gray);
+  padding: 1.875rem 1.25rem;
+  /* grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2; */
+  display: flex;
+  flex-flow: column nowrap;
+  transition: all 400ms ease;
+}
+
+.ediya-menu__item--detail.navigation.is-active {
+  opacity: 1;
+}
+
+.ediya-menu__item--name {
+  color: #202022;
+  font-size: 1.125rem;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 1.125rem;
+}
+
+.ediya-menu__item--name [lang="en"] {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--gray);
+}
+
+.ediya-menu__item--detail p {
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.ediya-menu__item--multi-column {
+  background-color: var(--silver);
+  column-count: 2;
+  column-rule: 1px solid var(--black2);
+  margin: 0 -1.25rem -1.875rem -1.25rem;
+}
+
+.ediya-menu__item--multi-column dl {
+  margin: 0;
+  overflow: hidden;
+}
+
+.ediya-menu__item--multi-column dt {
+  float: left;
+  width: 40%;
+  margin-left: 10%;
+  margin-top: 0.5rem;
+}
+
+.ediya-menu__item--multi-column dd {
+  margin-left: 0;
+  float: left;
+  width: 40%;
+  margin-right: 10%;
+  margin-top: 0.5rem;
+}
+
+.ediya-menu__item--detail .button-close-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
+  background-color: transparent;
+  color: var(--gray);
+}
+
 /* 모바일 */
 @media screen and (max-width: 767px) {
+  .header-container {
+    animation: moveFromBottom 600ms forwards;
+    position: sticky;
+    top: 0;
+  }
+
   .header {
     justify-content: space-between;
+  }
+
+  .brand {
+    animation-name: moveFromLeft;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+    /* animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); */
   }
 
   .header .button-open-menu {
     user-select: none;
     padding: 0;
     background-color: #fff;
+    animation-name: moveFromRight;
+    animation-duration: 800ms;
+    animation-delay: 150ms;
+    animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    animation-fill-mode: forwards;
   }
 
   .header .button-open-menu .ir {
@@ -78,9 +258,10 @@ body {
   }
 
   .navigation {
-    /* display: none; */
+    display: none;
     background-color: hsla(225, 57%, 10%, .9);
     position: fixed;
+    z-index: 100;
     top: 0;
     left: 0;
     width: 100%;
@@ -89,6 +270,7 @@ body {
     padding-top: 3.5rem;
     transform: translateX(105vw);
     transition: all 400ms ease;
+    opacity: .5;
   }
 
   .navigation.is-active {
@@ -123,6 +305,29 @@ body {
   .button-close-menu:hover,
   .button-close-menu:focus {
     transform: scale(1.5);
+  }
+
+  .ediya-drink {
+    padding: 1.125rem;
+  }
+
+  .ediya-menu__item {
+    animation-name: moveFromBottom;
+    position: static;
+    /*  */
+  }
+
+  .ediya-menu__item:nth-child(1) {
+    animation-duration: 800ms;
+  }
+  .ediya-menu__item:nth-child(2) {
+    animation-duration: 1000ms;
+  }
+  .ediya-menu__item:nth-child(3) {
+    animation-duration: 1200ms;
+  }
+  .ediya-menu__item:nth-child(4) {
+    animation-duration: 1400ms;
   }
 }
 
@@ -162,5 +367,11 @@ body {
     display: block;
     padding: 0.875rem 0;
     /* background-color: var(--blue); */
+  }
+
+  .ediya-drink {
+    padding: 1.875rem 1.125rem;
+    max-width: 48em;
+    margin: 0 auto;
   }
 }
